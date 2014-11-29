@@ -1,0 +1,13 @@
+{
+    "addons": [
+        "mongolab"
+    ],
+    "description": "Turnkey API server, web server, and browser client",
+    "env": {},
+    "keywords": [],
+    "logo": "https://www.qmachine.org/icon-128.png",
+    "name": "QMachine sandbox",
+    "repository": "https://github.com/wilkinson/qm-ruby-turnkey",
+    "scripts": {},
+    "website": "https://www.qmachine.org/"
+}
