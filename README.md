@@ -17,8 +17,10 @@ Details
 directions for installing software is painful. QMachine (QM), like any other
 project, has a lot of pieces, and even though the entire point of QM is that
 you should *not* install anything, some folks insist upon it. I understand
-completely, because sometimes the only way to understand how something works is
-to dissect it yourself.
+completely. Sometimes reading the
+[paper](http://www.biomedcentral.com/1471-2105/15/176)
+isn't enough to understand how something works and you just need to dissect it
+yourself.
 
 This repository contains the "blueprint" for a turnkey QM system, complete with
 an API server, a web server, and a barebones webpage that loads the browser
