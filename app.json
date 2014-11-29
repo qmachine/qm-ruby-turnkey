@@ -7,7 +7,7 @@
     "keywords": [],
     "logo": "https://www.qmachine.org/icon-128.png",
     "name": "QMachine sandbox",
-    "repository": "https://github.com/wilkinson/qm-ruby-turnkey",
+    "repository": "https://github.com/qmachine/qm-ruby-turnkey",
     "scripts": {},
     "website": "https://www.qmachine.org/"
 }
