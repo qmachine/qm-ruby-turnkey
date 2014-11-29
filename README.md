@@ -1,5 +1,5 @@
-QMachine turnkey system (Ruby version)
-======================================
+QMachine turnkey system
+=======================
 
 This is an experiment with the
 [Heroku Button](https://devcenter.heroku.com/articles/heroku-button).
