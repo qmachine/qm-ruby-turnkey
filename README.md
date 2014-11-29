@@ -14,7 +14,7 @@ Details
 -------
 
 [Documentation](https://docs.qmachine.org) is a beautiful thing, but writing
-directions for software installation is painful. QMachine (QM), like any other
+directions for installing software is painful. QMachine (QM), like any other
 project, has a lot of pieces, and even though the entire point of QM is that
 you should *not* install anything, some folks insist upon it. I understand
 completely, because sometimes the only way to understand how something works is
