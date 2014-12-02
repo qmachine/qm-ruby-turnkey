@@ -25,7 +25,7 @@ yourself.
 This repository contains the "blueprint" for a turnkey QM system, complete with
 an API server, a web server, and a barebones webpage that loads the browser
 client. The installed system will use the
-[Ruby version](https://docs.qmachine.org/en/latest/ruby.html)
-of QM for simplicity, and it will use MongoDB for storage.
+[Ruby version](https://github.com/qmachine/qm-ruby) of QM for simplicity, and
+it will use MongoDB for storage.
 
 
