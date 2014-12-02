@@ -4,10 +4,10 @@ QMachine turnkey system
 tl;dr
 -----
 
-Click the button below to deploy your own [QMachine](https://www.qmachine.org)
-on [Heroku](https://www.heroku.com):
-
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/qmachine/qm-ruby-turnkey)
+
+Click the button above to deploy your own [QMachine](https://www.qmachine.org)
+on [Heroku](https://www.heroku.com).
 
 
 Details
@@ -24,11 +24,8 @@ yourself.
 
 This repository contains the "blueprint" for a turnkey QM system, complete with
 an API server, a web server, and a barebones webpage that loads the browser
-client. It uses the
+client. The installed system will use the
 [Ruby version](https://docs.qmachine.org/en/latest/ruby.html)
-of QM for simplicity, and it provides a
-[Heroku Button](https://devcenter.heroku.com/articles/heroku-button)
-so that you can deploy your own turnkey system for free without even leaving
-your browser :-)
+of QM for simplicity, and it will use MongoDB for storage.
 
 

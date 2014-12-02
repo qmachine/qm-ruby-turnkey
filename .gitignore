@@ -11,9 +11,7 @@
 #   control -- always execute your commits manually!
 #
 #                                                       ~~ (c) SRW, 28 Nov 2014
-#                                                   ~~ last updated 28 Nov 2014
-
-#-  Temporary project directories
+#                                                   ~~ last updated 01 Dec 2014
 
 #-  Bundler stuff
 .bundle/
