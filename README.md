@@ -7,7 +7,7 @@ tl;dr
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/qmachine/qm-ruby-turnkey)
 
 Click the button above to deploy your own [QMachine](https://www.qmachine.org)
-on [Heroku](https://www.heroku.com).
+on [Heroku](https://www.heroku.com) for free.
 
 
 Details
