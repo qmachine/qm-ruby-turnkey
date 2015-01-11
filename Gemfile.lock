@@ -1,11 +1,11 @@
 GIT
   remote: https://github.com/qmachine/qm-ruby.git
-  revision: e4b1626fdd70b8c56caa3a0ea3e4645050b88ef9
+  revision: 7ece13b436a6560b5210e0fe6fd2beb92a01cff3
   specs:
     qm (1.2.1)
       bson_ext (= 1.11.1)
       httparty (= 0.13.3)
-      json (= 1.8.1)
+      json (= 1.8.2)
       mongo (= 1.11.1)
       sinatra (= 1.4.5)
       sinatra-cross_origin (= 0.3.2)
@@ -21,7 +21,7 @@ GEM
     httparty (0.13.3)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
-    json (1.8.1)
+    json (1.8.2)
     mongo (1.11.1)
       bson (= 1.11.1)
     multi_xml (0.5.5)
