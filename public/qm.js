@@ -560,7 +560,7 @@
 
 //- qmachine.js ~~
 //                                                      ~~ (c) SRW, 15 Nov 2012
-//                                                  ~~ last updated 02 Dec 2014
+//                                                  ~~ last updated 14 Jan 2015
 
 (function (global, sandbox) {
     'use strict';
@@ -625,8 +625,9 @@
         var y = avar();
         y.Q(function (evt) {
          // This function needs documentation of a more general form ...
-            if ((body !== undefined) && (body.length > 1048576)) {
-             // If it's certain to fail, why not just fail preemptively?
+            if ((body !== undefined) && (body.length > 65536)) {
+             // If it's likely to fail (because the default "max_body_size" is
+             // 64 KB), why not just fail preemptively?
                 return evt.fail('Upload size is too large.');
             }
             if (recent(method, url)) {
