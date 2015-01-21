@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/qmachine/qm-ruby.git
-  revision: cf77d489e28d10d256f2da6f0e90be3108535c08
+  revision: 8117bee333258565abcde86b7215af2869316e46
   specs:
     qm (1.2.2)
       bson_ext (= 1.11.1)

@@ -8,14 +8,14 @@
 #   See https://docs.qmachine.org/en/latest/ruby.html for more information.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 14 Dec 2014
+#                                                   ~~ last updated 20 Jan 2015
 
 require 'rubygems'
 require 'bundler'
 
 Bundler.require
 
-QM::launch_service({
+QM.launch_service({
     enable_api_server:  true,
     enable_cors:        false,
     enable_web_server:  true,
