@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/qmachine/qm-ruby.git
-  revision: 8117bee333258565abcde86b7215af2869316e46
+  revision: 7c2d5c88dc5d4cb37a3c02403f0030c833ca182b
   specs:
     qm (1.2.2)
       bson_ext (= 1.11.1)
@@ -9,6 +9,7 @@ GIT
       mongo (= 1.11.1)
       sinatra (= 1.4.5)
       sinatra-cross_origin (= 0.3.2)
+      unicorn (= 4.8.3)
 
 GEM
   remote: https://rubygems.org/
@@ -16,28 +17,28 @@ GEM
     bson (1.11.1)
     bson_ext (1.11.1)
       bson (~> 1.11.1)
-    daemons (1.1.9)
-    eventmachine (1.0.4)
     httparty (0.13.3)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     json (1.8.2)
+    kgio (2.9.3)
     mongo (1.11.1)
       bson (= 1.11.1)
     multi_xml (0.5.5)
     rack (1.6.0)
     rack-protection (1.5.3)
       rack
+    raindrops (0.13.0)
     sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
     sinatra-cross_origin (0.3.2)
-    thin (1.6.3)
-      daemons (~> 1.0, >= 1.0.9)
-      eventmachine (~> 1.0)
-      rack (~> 1.0)
     tilt (1.4.1)
+    unicorn (4.8.3)
+      kgio (~> 2.6)
+      rack
+      raindrops (~> 0.7)
 
 PLATFORMS
   ruby
@@ -45,4 +46,3 @@ PLATFORMS
 DEPENDENCIES
   json
   qm!
-  thin
