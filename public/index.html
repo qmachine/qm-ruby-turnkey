@@ -2,7 +2,7 @@
 <!--
     index.html ~~
                                                         ~~ (c) SRW, 08 Aug 2014
-                                                    ~~ last updated 28 Nov 2014
+                                                    ~~ last updated 15 Jan 2015
 -->
 <html lang="en">
   <head>
@@ -17,6 +17,12 @@
       For more information, please visit the
       <a href="https://www.qmachine.org" target="_blank">QMachine homepage</a>.
     </div>
+  <!--
+    NOTE: This test page wasn't passing the PhantomJS-based unit tests when the
+    test machine was offline, because some of the tests were trying to load
+    CoffeeScript from a web-based CDN.
+  -->
+    <script async src="./coffeescript.js"></script>
     <script async src="./qm.js"></script>
   </body>
 </html>

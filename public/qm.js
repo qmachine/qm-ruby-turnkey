@@ -5,7 +5,7 @@
 //  See https://quanah.readthedocs.org/en/latest/ for more information.
 //
 //                                                      ~~ (c) SRW, 14 Nov 2012
-//                                                  ~~ last updated 24 Nov 2014
+//                                                  ~~ last updated 15 Jan 2015
 
 (Function.prototype.call.call(function (that, lib) {
     'use strict';
@@ -84,8 +84,8 @@
     /*properties
         add_to_queue, apply, avar, can_run_remotely, comm, concat, def, done,
         epitaph, exit, f, fail, length, on, onerror, push, Q, queue, ready,
-        revive, run_remotely, shift, slice, stay, sync, toString, unshift, val,
-        valueOf, x
+        revive, run_remotely, shift, slice, snooze, stay, sync, toString,
+        unshift, val, valueOf, x
     */
 
  // Declarations
@@ -102,9 +102,9 @@
         state = {'epitaph': null, 'onerror': null, 'queue': [], 'ready': true};
         that = this;
         that.comm = function comm(obj) {
-         // This function provides a mechanism for manipulating the internal
-         // state of an avar without providing direct access to that state. It
-         // was inspired by the message-passing style used in Objective-C.
+         // This function is an instance method for manipulating the internal
+         // state of an avar. Its design was inspired by the message-passing
+         // style used in Objective-C.
             var args, message;
             for (message in obj) {
                 if (obj.hasOwnProperty(message)) {
@@ -166,7 +166,11 @@
                 }
                 break;
             case 'on':
-             // This one is an experiment ...
+             // This arm was originally added as an experiment into supporting
+             // an event-driven idiom inspired by Node.js, but "error" is still
+             // the only event available. New "fail" and "stay" events are
+             // under consideration, but they will be added only if they enable
+             // behavior that was previously impossible.
                 if ((args[0] === 'error') && (is_Function(args[1]))) {
                  // A computation has defined an `onerror` handler for this
                  // avar, but we need to make sure that it hasn't already
@@ -182,11 +186,17 @@
             case 'stay':
              // A computation that depends on this avar has been postponed,
              // but that computation will be put back into the queue directly
-             // by `local_call`. Thus, nothing actually needs to happen here;
-             // we just need to wait. For consistency with `exit` and `fail`,
-             // I allow `stay` to take a message argument, but right now it
-             // doesn't actually do anything. In the future, however, I may
-             // enable a verbose mode for debugging that outputs the message.
+             // by `local_call`. In many JS environments, it will be sufficient
+             // for us simply to wait for `revive` to be called again, but I
+             // am now realizing that some environments *should* run a function
+             // here. (My guess is that, if `stay` is called in an environment
+             // such as Spidermonkey that lacks an event loop, then it may not
+             // be possible to guarantee that `revive` will ever run. In such
+             // an environment, I can think of very few cases for which using
+             // `stay` is a good idea; to fix this edge case may involve the
+             // addition of a user-defined integration with the native event
+             // loop.) For consistency with `exit` and `fail`, `stay` accepts
+             // a message argument, but right now that argument won't be used.
                 break;
             default:
              // When this arm is chosen, either an error exists in Quanah or
@@ -213,17 +223,20 @@
      // This function exists to keep the abstraction in `revive` as clean and
      // close to English as possible. It tests for the existence of particular
      // user-defined functions so that `revive` can decide whether to use local
-     // or remote execution for a given task.
+     // or remote execution for a given task. Note also that the `=== true` is
+     // meaningful here because it requires the user-defined function to return
+     // a boolean `true` rather than a truthy value like `[]`.
         return ((is_Function(user_defs.can_run_remotely))   &&
                 (is_Function(user_defs.run_remotely))       &&
-                (user_defs.can_run_remotely(task)));
+                (user_defs.can_run_remotely(task) === true));
     };
 
     def = function (obj) {
      // This function enables the user to redefine "internal" functions from
      // outside the giant anonymous closure. In particular, this allows users
      // to "port" Quanah as a concurrency model for use with almost any storage
-     // or messaging system.
+     // or messaging system. For a real-world example, check out the browser
+     // client for QMachine (https://github.com/qmachine/qm-browser-client).
         var key;
         for (key in obj) {
             if ((obj.hasOwnProperty(key)) && (user_defs[key] === null)) {
@@ -236,8 +249,10 @@
     is_Function = function (f) {
      // This function returns `true` only if and only if the input argument
      // `f` is a function. The second condition is necessary to avoid a false
-     // positive when `f` is a regular expression. Please note that an avar
-     // whose `val` property is a function will still return `false`.
+     // positive when `f` is a regular expression. Quanah's priority is always
+     // to behave according to the ECMAScript standard, and thus it doesn't try
+     // to handle bugs like http://git.io/WcNQEQ or http://git.io/bZIaQw. Also,
+     // note that an avar with a function as its `val` will return `false`.
         return ((typeof f === 'function') && (f instanceof Function));
     };
 
@@ -274,17 +289,19 @@
      // This function applies the transformation `f` to `x` for method `f` and
      // property `x` of the input object `obj` by calling `f` with `evt` as an
      // input argument and `x` as the `this` value. The advantage of performing
-     // transformations this way versus computing `f(x)` directly is that it
+     // transformations this way (versus computing `f(x)` directly) is that it
      // allows the user to indicate the program's logic explicitly even when
      // the program's control is difficult or impossible to predict, as is
      // commonly the case in JavaScript when working with callback functions.
-        var evt;
+     // Note also that this function acts almost entirely by side effects.
         try {
-            evt = {
-             // This is the `evt` object, an object literal with methods that
-             // send messages to `obj.x` for execution control. Methods can
-             // be replaced by the user from within the calling function `f`
-             // without affecting the execution of computations :-)
+            obj.f.call(obj.x, {
+             // This is the object that defines the input argument given to the
+             // transformation `f`; it is most often called `evt`. It is an
+             // object literal that provides `exit`, `fail`, and `stay` methods
+             // that send messages to `obj.x` for flow control. Quanah used to
+             // store a reference to this object so that users could override
+             // the `fail` method, but no one ever found a reason to do it.
                 'exit': function (message) {
                  // This function indicates successful completion.
                     return obj.x.comm({'done': message});
@@ -324,19 +341,17 @@
                  // immediately if there's only one task to be run.
                     obj.x.comm({'stay': message});
                     queue.push(obj);
+                    if (is_Function(user_defs.snooze)) {
+                        user_defs.snooze();
+                    }
                     return;
                 }
-            };
-         // After all the setup, the actual invocation is anticlimactic ;-)
-            obj.f.call(obj.x, evt);
+            });
         } catch (err) {
-         // In early versions of Quanah, `stay` threw a special Error type as
-         // a crude form of message passing, but because it no longer throws
-         // errors, we can assume that all caught errors are failures. Because
-         // the user may have chosen to replace the `evt.fail` method with a
-         // personal routine, I have deliberately reused that reference here,
-         // to honor the user's wishes.
-            evt.fail(err);
+         // In early versions of Quanah, `stay` threw a special `Error` type as
+         // a crude form of message passing, but because Quanah no longer
+         // throws errors, it can assume that all caught errors are failures.
+            obj.x.comm({'fail': err});
         }
         return;
     };
@@ -345,7 +360,11 @@
      // This function exists only to forward input arguments to a user-defined
      // function which may or may not ever be provided. JS doesn't crash in a
      // situation like this because `can_run_remotely` tests for the existence
-     // of the user-defined method before delegating to `run_remotely`.
+     // of the user-defined method before delegating to `run_remotely`. Note
+     // that the lines below should not be simplified into a single line; then
+     // current form ensures that `run_remotely` always returns `undefined`,
+     // because user-provided definitions may not adhere to the prescribed
+     // signature ;-)
         user_defs.run_remotely(task);
         return;
     };
@@ -380,7 +399,7 @@
         while (stack.length > 0) {
          // This `while` loop replaces the previous `union` function, which
          // called itself recursively to create an array `x` of unique
-         // dependencies from the input arguments `args`. Instead, I am using
+         // dependencies from the input arguments `args`. Instead, Quanah uses
          // an array-based stack here with a `while` loop as a means to avoid
          // the treacherous function recursion stack and its unpredictably
          // limited depth, since a user could potentially write fiendishly
@@ -411,11 +430,10 @@
                 y.comm({'add_to_queue': f});
                 return y;
             }
-            var blocker, count, egress, i, m, n, ready;
+            var blocker, count, egress, j, m, n, ready;
             blocker = function (evt) {
-             // This function stores the `evt` argument into an array so we can
-             // prevent further execution involving `val` until after we call
-             // the input argument `f`.
+             // This function stores the `evt` argument into an array that will
+             // be used later by the input argument to `f`.
                 egress.push(evt);
                 return count();
             };
@@ -424,18 +442,16 @@
              // some private state variables in order to delay the execution of
              // `f` until certain conditions are satisfied.
                 m += 1;
-                if (m === n) {
-                    ready = true;
-                }
+                ready = (m === n);
                 return revive();
             };
             egress = [];
             m = 0;
             n = x.length;
-            ready = false;
-            for (i = 0; i < n; i += 1) {
-                if (x[i] instanceof AVar) {
-                    x[i].Q(blocker);
+            ready = (m === n);
+            for (j = 0; j < n; j += 1) {
+                if (x[j] instanceof AVar) {
+                    x[j].Q(blocker);
                 } else {
                     count();
                 }
@@ -456,26 +472,34 @@
                  // all of the original arguments given to `sync`.
                     'exit': function (message) {
                      // This function signals successful completion :-)
-                        var i, n;
-                        for (i = 0, n = egress.length; i < n; i += 1) {
-                            egress[i].exit(message);
+                        var index;
+                        for (index = 0; index < egress.length; index += 1) {
+                            egress[index].exit(message);
                         }
                         return evt.exit(message);
                     },
                     'fail': function (message) {
                      // This function signals a failed execution :-(
-                        var i, n;
-                        for (i = 0, n = egress.length; i < n; i += 1) {
-                            egress[i].fail(message);
+                        var index;
+                        for (index = 0; index < egress.length; index += 1) {
+                            egress[index].fail(message);
                         }
                         return evt.fail(message);
                     },
                     'stay': function (message) {
-                     // This function postpones execution temporarily.
-                        var i, n;
-                        for (i = 0, n = egress.length; i < n; i += 1) {
-                            egress[i].stay(message);
+                     // This function postpones execution temporarily. Although
+                     // it seems reasonable that `stay` should match the forms
+                     // of `exit` and `fail`, such behavior doesn't really make
+                     // sense. Telling all the blocked avars to stay is silly
+                     // because they're already blocked. Moreover, it would
+                     // cause them all to run the non-idempotent `blocker`
+                     // function again -- not a good move!
+                     /*
+                        var index;
+                        for (index = 0; index < egress.length; index += 1) {
+                            egress[index].stay(message);
                         }
+                     */
                         return evt.stay(message);
                     }
                 });
@@ -486,25 +510,29 @@
         return y;
     };
 
-    user_defs = {'can_run_remotely': null, 'run_remotely': null};
+    user_defs = {
+        'can_run_remotely': null,
+        'run_remotely': null,
+        'snooze': null
+    };
 
  // Prototype definitions
 
     AVar.prototype.on = function () {
      // This function's only current use is to allow users to set custom error
      // handlers, but by mimicking the same idiom used by jQuery and Node.js, I
-     // am hoping to leave myself plenty of room to grow later :-)
+     // am hoping to leave Quanah plenty of room to grow later :-)
         this.comm({'on': Array.prototype.slice.call(arguments)});
         return this;
     };
 
-    AVar.prototype.Q = function method_Q(f) {
+    AVar.prototype.Q = function methodQ(f) {
      // This function is the infamous "Method Q" that once doubled as the
      // "namespace" for Quanah. Here, it is defined as a chainable prototype
      // method for avars that takes a single input argument. The input argument
      // is expected to be either a monadic (single variable) function or else
-     // an avar a monadic function as its `val`.
-        if (AVar.prototype.Q !== method_Q) {
+     // an avar with a monadic function as its `val`.
+        if (AVar.prototype.Q !== methodQ) {
             throw new Error('`AVar.prototype.Q` may have been compromised.');
         }
         var x = (this instanceof AVar) ? this : avar(this);
@@ -523,9 +551,9 @@
      // This function delegates to the avar's `val` property if possible. The
      // code here differs from the code for `AVar.prototype.valueOf` because it
      // assumes that the returned value should have a particular type (string).
-     // My reasoning here is that, if the returned value were not a string, the
-     // JS engine will coerce it to a string; for the `null` and `undefined`
-     // cases, we can circumvent that coercion and thereby improve performance.
+     // The reasoning here is that, if the returned value were not a string,
+     // the JS engine would *probably* coerce it to a string, but why worry?
+     // Specifying the behavior explicitly is cheap and easy to understand :-)
         if (this.val === null) {
             return 'null';
         }
@@ -1564,7 +1592,7 @@
      // If special property values have been added to `x`, they will be copied
      // onto `f` and `x` via the "copy constructor" idiom. Note that special
      // properties defined for `f` will be overwritten ...
-        f = copy({box: obj.x.box}, avar(obj.f));
+        f = copy({box: obj.x.box, key: uuid()}, avar(obj.f));
         first = true;
         handler = function (message) {
          // This function tells the original `x` that something has gone awry.
@@ -1588,6 +1616,7 @@
          // the execution should follow the data.
             var task = avar({f: f.key, x: x.key});
             task.box = obj.x.box;
+            task.key = uuid();
             task.status = 'waiting';
             task.on('error', function (message) {
              // This function alerts `f` and `x` that something has gone awry.
@@ -2234,7 +2263,9 @@
         enumerable: true,
         //writable: false,
         value: function () {
-         // This function is syntactic sugar for logging output.
+         // This function is syntactic sugar for logging output. I honestly
+         // cannot remember why I used `QM.puts` here instead of just `puts`,
+         // because this is a function that should *not* run remotely ...
             QM.puts(this);
             return this;
         }
@@ -2334,6 +2365,8 @@
         return;
     }());
 
+ // Invocations
+
     (function loop() {
      // Here, we start a simple event loop that runs in the background. It
      // enables the process of scripting volunteers significantly easier, too,
@@ -2372,8 +2405,6 @@
         revive();
         return;
     }());
-
- // Invocations
 
     state.box = uuid();
 
