@@ -32,6 +32,10 @@ The main difference is that the Ruby version uses synchronous (blocking) I/O,
 which makes the code shorter and easier to understand. There are other subtle
 differences, but those will gradually disappear in the future.
 
+For more information about what happens behind the scenes when you click the
+button, see Heroku's
+[original blog post](https://blog.heroku.com/archives/2014/8/7/heroku-button).
+
 Enjoy!
 
 
