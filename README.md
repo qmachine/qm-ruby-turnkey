@@ -19,7 +19,7 @@ QMachine (QM), like many other projects, has a lot of individual pieces, and it
 can be difficult to understand how it all fits together just from reading the
 [paper](http://www.biomedcentral.com/1471-2105/15/176). So, even though the
 entire point of QM is that you should *not* install anything, this repository
-exists to help those who insist.
+is for those who insist.
 
 This repository contains the "blueprint" for a turnkey QM system that will use
 the [Ruby version](https://github.com/qmachine/qm-ruby) of the server-side
