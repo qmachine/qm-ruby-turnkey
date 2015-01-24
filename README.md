@@ -13,19 +13,25 @@ on [Heroku](https://www.heroku.com) for free.
 Details
 -------
 
-[Documentation](https://docs.qmachine.org) is a beautiful thing, but writing
-directions for installing software is painful. QMachine (QM), like any other
-project, has a lot of pieces, and even though the entire point of QM is that
-you should *not* install anything, some folks insist upon it. I understand
-completely. Sometimes reading the
-[paper](http://www.biomedcentral.com/1471-2105/15/176)
-isn't enough to understand how something works and you just need to dissect it
-yourself.
+[Documentation](https://docs.qmachine.org/en/latest/) is a beautiful thing, but
+reading directions for installing software can be as painful as writing them.
+QMachine (QM), like many other projects, has a lot of individual pieces, and it
+can be difficult to understand how it all fits together just from reading the
+[paper](http://www.biomedcentral.com/1471-2105/15/176). So, even though the
+entire point of QM is that you should *not* install anything, this repository
+exists to help those who insist.
 
-This repository contains the "blueprint" for a turnkey QM system, complete with
-an API server, a web server, and a barebones webpage that loads the browser
-client. The installed system will use the
-[Ruby version](https://github.com/qmachine/qm-ruby) of QM for simplicity, and
-it will use MongoDB for storage.
+This repository contains the "blueprint" for a turnkey QM system that will use
+the [Ruby version](https://github.com/qmachine/qm-ruby) of the server-side
+components for simplicity. The Ruby version is deliberately simpler than the
+[Node.js version](https://github.com/qmachine/qm-nodejs) because it was
+originally intended to be used as the "teaching version" of QM. It uses
+single-thread, multi-process concurrency to handle HTTP requests, just like the
+Node.js version, and it makes the same calls to MongoDB for storage, too. The
+main difference is that the input/output (IO) model is much easier to reason
+about in the Ruby version, because it uses synchronous (blocking) I/O. There
+are other subtle differences, but those will gradually disappear in the future.
+
+Enjoy!
 
 
