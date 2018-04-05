@@ -20,12 +20,14 @@ QM.launch_service({
     enable_cors:        false,
     enable_web_server:  true,
     persistent_storage: {
-        mongo:          ENV['MONGOLAB_URI']
+#        mongo:          ENV['MONGOLAB_URI']
+        postgres:       ENV['DATABASE_URL']
     },
     port:               ENV['PORT'],
     public_folder:      'public',
     trafficlog_storage: {
-        mongo:          ENV['MONGOLAB_URI']
+#        mongo:          ENV['MONGOLAB_URI']
+        postgres:       ENV['DATABASE_URL']
     },
     worker_procs:       ENV['WEB_CONCURRENCY'] || 3
 })
