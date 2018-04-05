@@ -8,7 +8,7 @@
 #   See https://docs.qmachine.org/en/latest/ruby.html for more information.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 22 Jan 2015
+#                                                   ~~ last updated 06 Apr 2018
 
 require 'rubygems'
 require 'bundler'
@@ -20,12 +20,12 @@ QM.launch_service({
     enable_cors:        false,
     enable_web_server:  true,
     persistent_storage: {
-        mongo:          ENV['MONGOLAB_URI']
+        postgres:       ENV['DATABASE_URL']
     },
     port:               ENV['PORT'],
     public_folder:      'public',
     trafficlog_storage: {
-        mongo:          ENV['MONGOLAB_URI']
+        postgres:       ENV['DATABASE_URL']
     },
     worker_procs:       ENV['WEB_CONCURRENCY'] || 3
 })

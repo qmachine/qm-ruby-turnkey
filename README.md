@@ -27,7 +27,7 @@ components for simplicity. The Ruby version is deliberately simpler than the
 [Node.js version](https://github.com/qmachine/qm-nodejs) because it was
 originally intended to be used as the "teaching version" of QM. It uses
 single-threaded, multi-process concurrency to handle HTTP requests, just like
-the Node.js version, and it uses the same calls to MongoDB for storage, too.
+the Node.js version, and it uses the same calls to PostgreSQL for storage, too.
 The main difference is that the Ruby version uses synchronous (blocking) I/O,
 which makes the code shorter and easier to understand. There are other subtle
 differences, but those will gradually disappear in the future.

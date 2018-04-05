@@ -1,7 +1,11 @@
 {
-    "addons": [
-        "mongolab"
-    ],
+    "addons": [{
+        "plan": "heroku-postgresql",
+        "as": "DATABASE_URL",
+        "options": {
+            "version": "9.5"
+        }
+    }],
     "description": "Turnkey API server, web server, and browser client",
     "env": {},
     "keywords": [],
